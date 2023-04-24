@@ -11,4 +11,5 @@
 *.rar
 *.pkl
 *.jpg
-*HAT
+HAT/
+CAR/
