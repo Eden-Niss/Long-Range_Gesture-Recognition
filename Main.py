@@ -2,12 +2,13 @@ import argparse
 import logging
 from Gesture_class import CNN, train
 from data_loading import data_loaders
+from pretrained_models import load_pretrained_model
 import wandb
 
 
 parser = argparse.ArgumentParser(description='Training Config', add_help=False)
 
-parser.add_argument('--root_train', default=r'', metavar='DIR',
+parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
                     help='path to training dataset')
 parser.add_argument('--root_val', default=r'', metavar='DIR',
                     help='path to training dataset')
@@ -17,6 +18,12 @@ parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='input batch size for training (default: 16)')
 parser.add_argument('--criterion', default=r'rmse', metavar='CRI',
                     help='Criterion loss. (default: rmse)')
+parser.add_argument('--pretrained', default=False, type=bool,
+                    help='Use pretrained model. (default: false)')
+parser.add_argument('--pretrained_model', default='DenseNet', type=str,
+                    help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
+parser.add_argument('--num_classes', type=int, default=5,
+                    help='Number of classes to classify')
 
 # Optimizer parameters
 parser.add_argument('--beta1', default=0.9159433559021458, type=float,
@@ -43,7 +50,7 @@ parser.add_argument('--log_interval', type=int, default=50, metavar='N',
                     help='how many batches to wait before logging training status')
 parser.add_argument('--log_wandb', action='store_true', default=True,
                     help='log training and validation metrics to wandb')
-parser.add_argument('-j', '--workers', type=int, default=1, metavar='N',
+parser.add_argument('-j', '--workers', type=int, default=0, metavar='N',
                     help='how many training processes to use (default: 2)')
 parser.add_argument('--device', type=str, default='cuda:0',
                     help='type "cpu" if there is no gpu')
@@ -54,7 +61,12 @@ parser.add_argument("--load_model", default=False, type=str)
 def main(args_config):
 
     train_dataloader, val_dataloader = data_loaders(args_config)
-    model = CNN(args_config.device)
+
+    if args_config.pretrained:
+        model = load_pretrained_model(args_config.pretrained_model, args_config.num_classes)
+        model.to(args_config.device)
+    else:
+        model = CNN(args_config.device)
 
     try:
         train(args_config, model, train_dataloader, val_dataloader)
