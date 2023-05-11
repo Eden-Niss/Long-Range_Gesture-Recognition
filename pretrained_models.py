@@ -49,3 +49,4 @@ def load_pretrained_model(model_name, num_classes):
     else:
         raise ValueError("The pre-trained model must be either of the following:"
                          " DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet")
+    return model
