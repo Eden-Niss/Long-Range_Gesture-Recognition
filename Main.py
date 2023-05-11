@@ -1,13 +1,18 @@
 import argparse
 import logging
 from Gesture_class import CNN, train
-from data_loading import data_loaders
+from dataloader import data_loaders
+# from data_loading import data_loaders
 from pretrained_models import load_pretrained_model
 import wandb
 
 
 parser = argparse.ArgumentParser(description='Training Config', add_help=False)
 
+parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', metavar='DIR',
+                    help='path to csv dataset')
+parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
+                    help='path to csv dataset')
 parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
                     help='path to training dataset')
 parser.add_argument('--root_val', default=r'', metavar='DIR',
@@ -18,7 +23,7 @@ parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='input batch size for training (default: 16)')
 parser.add_argument('--criterion', default=r'rmse', metavar='CRI',
                     help='Criterion loss. (default: rmse)')
-parser.add_argument('--pretrained', default=False, type=bool,
+parser.add_argument('--pretrained', default=True, type=bool,
                     help='Use pretrained model. (default: false)')
 parser.add_argument('--pretrained_model', default='DenseNet', type=str,
                     help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
@@ -59,8 +64,8 @@ parser.add_argument("--load_model", default=False, type=str)
 
 
 def main(args_config):
-
-    train_dataloader, val_dataloader = data_loaders(args_config)
+    classes = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4}
+    train_dataloader, val_dataloader, _ = data_loaders(args_config, classes)
 
     if args_config.pretrained:
         model = load_pretrained_model(args_config.pretrained_model, args_config.num_classes)
