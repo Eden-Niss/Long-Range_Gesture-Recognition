@@ -5,6 +5,8 @@ import time
 import datetime
 import subprocess
 import re
+import torch
+import torchvision
 
 
 def save_net(path, state, epoch):
