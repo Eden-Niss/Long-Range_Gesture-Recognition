@@ -100,11 +100,13 @@ def train(args, model, train_dataloader, val_dataloader):
             loss = criterion(pred, label)
             batch_train_loss.append(loss.item())
 
-            acc = (pred.round() == label).float().mean()
-            batch_train_acc.append(acc.item())
+            _, pred_class = torch.max(pred, dim=1)
+            label_class = torch.nonzero(label == 1, as_tuple=False)[:, 1]
+            acc = torch.sum(torch.eq(pred_class, label_class)).item() / len(label_class)
+            batch_train_acc.append(acc)
 
             # wandb.log({"train_loss": loss.item(),
-            #            "train_accuracy": acc.item()})
+            #            "train_accuracy": acc})
 
             optimizer.zero_grad()
             loss.backward()
@@ -112,7 +114,7 @@ def train(args, model, train_dataloader, val_dataloader):
 
             pbar.set_postfix({'Epoch': epoch+1,
                               'Train Loss': loss.item(),
-                              'Train Acc': acc.item()})
+                              'Train Acc': acc})
 
             torch.cuda.empty_cache()
 
@@ -124,7 +126,6 @@ def train(args, model, train_dataloader, val_dataloader):
             pbar = tqdm(val_dataloader, total=len(val_dataloader))
             for img, label in pbar:
                 val_x = img.to(device)
-
                 val_label = label.to(device)
 
                 val_pred = model(val_x)
@@ -132,15 +133,17 @@ def train(args, model, train_dataloader, val_dataloader):
                 loss_val = criterion(val_pred, val_label)
                 batch_val_loss.append(loss_val.item())
 
-                acc_val = (val_pred.round() == val_label).float().mean()
-                batch_val_acc.append(acc_val.item())
+                _, pred_class = torch.max(val_pred, dim=1)
+                label_class = torch.nonzero(loss_val == 1, as_tuple=False)[:, 1]
+                acc_val = torch.sum(torch.eq(pred_class, label_class)).item() / len(label_class)
+                batch_val_acc.append(acc_val)
 
                 # wandb.log({"validation_loss": loss_val.item()
-                #            "validation_accuracy": acc_val.item()})
+                #            "validation_accuracy": acc_val})
 
                 pbar.set_postfix({'Epoch': epoch + 1,
                                   'Val Loss': loss_val.item(),
-                                  'Val Acc': acc_val.item()})
+                                  'Val Acc': acc_val})
 
                 del val_x, val_label, val_pred
                 torch.cuda.empty_cache()
