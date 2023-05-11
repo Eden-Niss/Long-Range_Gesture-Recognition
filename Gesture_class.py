@@ -51,8 +51,8 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.Linear(64, 4),
             nn.ReLU(),
-            nn.Linear(4, 1),
-            nn.ReLU()
+            nn.Linear(4, 5),
+            nn.Softmax()
         )
         self.to(device)
 
@@ -63,12 +63,14 @@ class CNN(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
+        x = torch.flatten(x, 1)
         output = self.fc(x)
         return output
 
 
 def train(args, model, train_dataloader, val_dataloader):
     device = args.device
+
     params = model.parameters()
 
     optimizer = optim.Adam(params, lr=args.lr, betas=[args.beta1, args.beta2],
@@ -77,7 +79,7 @@ def train(args, model, train_dataloader, val_dataloader):
     criterion = nn.CrossEntropyLoss()
     best_acc = -np.inf
 
-    # scheduler = ReduceLROnPlateau(optimizer, 'min', patience=10)
+    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=10)
 
     # wandb.watch(model, log_freq=100)
 
@@ -87,7 +89,7 @@ def train(args, model, train_dataloader, val_dataloader):
 
         batch_train_loss = []
         batch_train_acc = []
-        model.train()
+
         pbar = tqdm(train_dataloader, total=len(train_dataloader))
         for img, label in pbar:
             train_x = img.to(device)
@@ -155,7 +157,7 @@ def train(args, model, train_dataloader, val_dataloader):
             best_weights = copy.deepcopy(model.state_dict())
             best_weights_path = save_net(args.saveM_path, best_weights, str(epoch+1))
 
-        # scheduler.step(loss_val)
+        scheduler.step(loss_val)
 
     print(f'\nBest validation accuracy: {best_acc}')
     print(f'\nBest weights can be found here: {best_weights_path}')
