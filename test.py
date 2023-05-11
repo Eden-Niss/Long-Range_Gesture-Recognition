@@ -34,10 +34,12 @@ def evaluate_model(test_set, model, device):
     gt_label = torch.tensor(gt_label)
     preds = torch.tensor(preds)
 
-    acc = (preds.round() == gt_label).float().mean()
-
     criterion = nn.CrossEntropyLoss()
     ce = criterion(gt_label, preds)
+
+    _, pred_class = torch.max(preds, dim=1)
+    label_class = torch.nonzero(gt_label == 1, as_tuple=False)[:, 1]
+    acc = torch.sum(torch.eq(pred_class, label_class)).item() / len(label_class)
 
     print(f'Test CE: {ce}. Test Accuracy: {acc}')
 
@@ -48,7 +50,7 @@ if __name__ == "__main__":
 
     args_config = parser.parse_args()
 
-    test_dataloader = data_loaders(args_config, test=True)
+    _, _, test_dataloader = data_loaders(args_config, test=True)
 
     model_path = args_config.root_checkpoint
     model = CNN(device)
