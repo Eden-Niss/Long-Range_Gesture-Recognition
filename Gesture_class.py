@@ -79,7 +79,7 @@ def train(args, model, train_dataloader, val_dataloader):
     criterion = nn.CrossEntropyLoss()
     best_acc = -np.inf
 
-    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=10)
+    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=7)
 
     # wandb.watch(model, log_freq=100)
 
@@ -90,6 +90,7 @@ def train(args, model, train_dataloader, val_dataloader):
         batch_train_loss = []
         batch_train_acc = []
 
+        model.train()
         pbar = tqdm(train_dataloader, total=len(train_dataloader))
         for img, label in pbar:
             train_x = img.to(device)
@@ -134,7 +135,7 @@ def train(args, model, train_dataloader, val_dataloader):
                 batch_val_loss.append(loss_val.item())
 
                 _, pred_class = torch.max(val_pred, dim=1)
-                label_class = torch.nonzero(loss_val == 1, as_tuple=False)[:, 1]
+                label_class = torch.nonzero(val_label == 1, as_tuple=False)[:, 1]
                 acc_val = torch.sum(torch.eq(pred_class, label_class)).item() / len(label_class)
                 batch_val_acc.append(acc_val)
 
@@ -160,7 +161,7 @@ def train(args, model, train_dataloader, val_dataloader):
             best_weights = copy.deepcopy(model.state_dict())
             best_weights_path = save_net(args.saveM_path, best_weights, str(epoch+1))
 
-        scheduler.step(loss_val)
+        scheduler.step(mean_val_loss)
 
     print(f'\nBest validation accuracy: {best_acc}')
     print(f'\nBest weights can be found here: {best_weights_path}')

@@ -17,7 +17,7 @@ parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', m
                     help='path to csv dataset')
 parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--root_checkpoint', default=r'checkpoint/DenseNet/05_11_2023/24_net_Thu_May_11_16_50_20_2023.pt',
+parser.add_argument('--root_checkpoint', default=r'checkpoint/EfficientNet/05_17_2023/1_net_Wed_May_17_10_53_46_2023.pt',
                     metavar='DIR', help='path to training dataset')
 parser.add_argument('--img_size', type=int, default=224, metavar='Size',
                     help='Image size for resize')
@@ -28,7 +28,7 @@ parser.add_argument('--num_classes', type=int, default=5,
                     help='Number of classes to classify')
 parser.add_argument('--pretrained', default=True, type=bool,
                     help='Use pretrained model. (default: false)')
-parser.add_argument('--pretrained_model', default='DenseNet', type=str,
+parser.add_argument('--pretrained_model', default='EfficientNet', type=str,
                     help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
 parser.add_argument('-j', '--workers', type=int, default=1, metavar='N',
                     help='how many training processes to use (default: 2)')
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         model = load_model4test(args_config.pretrained_model, args_config.num_classes, args_config.root_checkpoint)
         model.to(device)
     else:
-        model = CNN(args_config.device)
+        model = CNN(device)
         model.load_state_dict(torch.load(model_path, map_location=device))
 
     model.eval()
