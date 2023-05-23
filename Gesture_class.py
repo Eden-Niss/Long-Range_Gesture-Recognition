@@ -51,7 +51,7 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.Linear(64, 4),
             nn.ReLU(),
-            nn.Linear(4, 5),
+            nn.Linear(4, 6),
             nn.Softmax()
         )
         self.to(device)
