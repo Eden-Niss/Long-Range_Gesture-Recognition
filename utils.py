@@ -1,5 +1,6 @@
 import torch
 import torchvision
+import cv2
 import os
 import time
 import datetime
@@ -10,6 +11,7 @@ import torchvision
 from tqdm import tqdm
 import torch.nn as nn
 import numpy as np
+import supervision as sv
 
 
 def save_net(path, state, epoch):
@@ -66,3 +68,46 @@ def test(args, model, test_dataloader):
     ce = np.mean(batch_val_loss)
     acc = np.mean(batch_val_acc)
     print(f'Test CE: {ce}. Test Accuracy: {acc}')
+
+
+def CropingMask(original_image, mask_image):
+    imagergb = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
+    color_mask = np.zeros_like(imagergb)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    dilate = cv2.dilate(mask_image, kernel, iterations=15)
+    d = np.array(dilate, dtype=bool)
+    color_mask[:, :, 0] += (d * 255).astype('uint8')
+    color_mask[:, :, 1] += (d * 255).astype('uint8')
+    color_mask[:, :, 2] += (d * 255).astype('uint8')
+    res = ((imagergb  / color_mask) * color_mask).astype('uint8')
+    res = cv2.cvtColor(res, cv2.COLOR_RGB2BGR)
+    positions = np.nonzero(res)
+    top = positions[0].min()
+    bottom = positions[0].max()
+    left = positions[1].min()
+    right = positions[1].max()
+    cropped_image = res[top:bottom, left:right]
+    # cropped_image = cv2.resize(cropped_image, (640, 480))
+    return cropped_image
+
+
+def yolo_maskNcrop(frame, model):
+    results = model(frame)[0]
+
+    detections = sv.Detections.from_yolov8(results)
+
+    for i in detections.class_id:
+        class_id = model.model.names[i]
+        if class_id == 'person':
+            where = torch.nonzero(results.boxes.cls == float(0))[0][0].item()
+
+            mask = results.masks.masks[where]
+
+            mask = mask.detach().cpu().numpy()
+            mask = np.squeeze(mask)
+            mask = cv2.resize(mask, (640, 480))
+
+            cropped = CropingMask(frame, mask)
+            mask[np.where(mask > 0)] *= 255
+            return cropped
+
