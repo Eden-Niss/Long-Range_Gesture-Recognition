@@ -28,7 +28,7 @@ class RegPointDataset(Dataset):
 
     def __getitem__(self, index):
         sample = self.data_array[index]
-        image_path = os.path.join(self.dir_img, str(sample[2]), str(sample[1]), 'image', str(sample[0]))
+        image_path = os.path.join(self.dir_img, str(sample[2]), str(sample[1]), 'crop', str(sample[0]))
         img = Image.open(image_path)
         img_transform = self.transform(img)
         # label = self.classes[sample[2]]

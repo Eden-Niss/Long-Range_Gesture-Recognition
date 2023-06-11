@@ -1,5 +1,5 @@
 import torch
-from dataloader import data_loaders
+from data_loading import data_loaders
 from Gesture_class import CNN
 import argparse
 import warnings
@@ -11,24 +11,24 @@ warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser(description='Test Config', add_help=False)
 
-parser.add_argument('--root_test', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
+parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
                     help='path to training dataset')
 parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', metavar='DIR',
                     help='path to csv dataset')
 parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--root_checkpoint', default=r'checkpoint/EfficientNet/05_17_2023/1_net_Wed_May_17_10_53_46_2023.pt',
+parser.add_argument('--root_checkpoint', default=r'checkpoint/Wide_ResNet/crop/05_30_2023/20_net_Tue_May_30_06_14_57_2023.pt',
                     metavar='DIR', help='path to training dataset')
 parser.add_argument('--img_size', type=int, default=224, metavar='Size',
                     help='Image size for resize')
 parser.add_argument('--batch_size', type=int, default=1, metavar='N',
                     help='input batch size for training (default: 16)')
 parser.add_argument("--drop_last", default=True, type=str)
-parser.add_argument('--num_classes', type=int, default=5,
+parser.add_argument('--num_classes', type=int, default=6,
                     help='Number of classes to classify')
 parser.add_argument('--pretrained', default=True, type=bool,
                     help='Use pretrained model. (default: false)')
-parser.add_argument('--pretrained_model', default='EfficientNet', type=str,
+parser.add_argument('--pretrained_model', default='Wide_ResNet', type=str,
                     help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
 parser.add_argument('-j', '--workers', type=int, default=1, metavar='N',
                     help='how many training processes to use (default: 2)')
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     args_config = parser.parse_args()
 
     classes = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4}
-    _, _, test_dataloader = data_loaders(args_config, classes)
+    _, _, test_dataloader = data_loaders(args_config)
 
     model_path = args_config.root_checkpoint
 

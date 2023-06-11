@@ -8,7 +8,7 @@ from utils import CropingMask, yolo_maskNcrop
 from torchvision import transforms
 
 
-def realtime_gesture_class(model, transform, gestures_dict, crop=True):
+def realtime_gesture_class(model, yolo_model, transform, gestures_dict, crop=True):
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -18,10 +18,11 @@ def realtime_gesture_class(model, transform, gestures_dict, crop=True):
     while True:
         ret, frame = cap.read()
         if crop:
-            cropped = yolo_maskNcrop(frame, model)
-            input = transform(cropped)
+            cropped = yolo_maskNcrop(frame, yolo_model)
+            input = transform(cropped)[None, :].to(device)
         else:
             input = frame
+            input = transform(input).to(device)
         with torch.no_grad():
             gesture = model(input)
         _, gesture_class = torch.max(gesture, dim=1)
@@ -30,10 +31,10 @@ def realtime_gesture_class(model, transform, gestures_dict, crop=True):
         gesture_name = list(gestures_dict.keys())[index]
         cv2.putText(frame,
                     gesture_name,
-                    (50, 50),
-                    font, 0.5,
-                    (255, 255, 255),
-                    1,
+                    (50, 60),
+                    font, 3,
+                    (0, 0, 0),
+                    3,
                     cv2.LINE_AA)
         cv2.imshow('Classify', frame)
         if cv2.waitKey(5) & 0xFF == 27:
@@ -48,21 +49,25 @@ if __name__ == "__main__":
     num_classes = 6
     gestures_dict = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4, 'Come': 5}
 
-    model_name = ''  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-    weights_root = ''
+    # Classifying
+    model_name = 'Simple_CNN'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
+    weights_root = ' /home/roblab20/PycharmProjects/LongRange/checkpoint/Simple_cnn/crop/17_net_Wed_May_24_16_18_56_2023.pt'
 
     transform = transforms.Compose([
-                    transforms.Resize((224, 224)),
-                    transforms.ToTensor(),
-                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-                ])
+        transforms.ToTensor(),
+        transforms.Resize((224, 224)),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+
+    # YOLO
+    yolo_model = YOLO('yolo_pt/yolov8n-seg.pt')
 
     if model_name == 'Simple_CNN':
         model = CNN(device)
         model.load_state_dict(torch.load(weights_root, map_location=device))
         model.eval()
     else:
-        model = load_model4test(model_name, num_classes, weights_root)
+        model = load_model4test(model_name, num_classes, weights_root, device)
         model.eval()
 
-    realtime_gesture_class(model, transform, gestures_dict)
+    realtime_gesture_class(model, yolo_model, transform, gestures_dict)

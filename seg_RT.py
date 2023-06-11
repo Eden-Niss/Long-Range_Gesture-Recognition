@@ -15,14 +15,14 @@ warnings.filterwarnings('ignore')
 
 parser = argparse.ArgumentParser(description='Saving Paths', add_help=False)
 
-parser.add_argument('--name', default='Point', type=str, help='point; nopoint; bad; good; stop; victory')
-parser.add_argument('--path_images2crop', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_seg_8_3/bad/Bad',
+parser.add_argument('--name', default='Come', type=str, help='Point; None; Bad; Good; Stop; Come')
+parser.add_argument('--path_images2crop', default=r'data/data_LongRANGE/Come',
                     metavar='DIR', help='path to cropped images')
-parser.add_argument('--root_image', default=r'/home/roblab20/PycharmProjects/LongRange/data/train_data/Point/image',
+parser.add_argument('--root_image', default=r'data/data_LongRANGE/Come',
                     metavar='DIR', help='path to images')
-parser.add_argument('--root_mask', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_seg_8_3/after_yolo/mask',
+parser.add_argument('--root_mask', default=r'data/data_LongRANGE/Come',
                     metavar='DIR', help='path to mask')
-parser.add_argument('--root_crop', default=r'/home/roblab20/PycharmProjects/LongRange/data/train_data/Point/crop',
+parser.add_argument('--root_crop', default=r'data/data_LongRANGE/Come',
                     metavar='DIR', help='path to cropped images')
 
 
@@ -43,7 +43,7 @@ def CropingMask(original_image, mask_image):
     left = positions[1].min()
     right = positions[1].max()
     cropped_image = res[top:bottom, left:right]
-    cropped_image = cv2.resize(cropped_image, (640, 480))
+    # cropped_image = cv2.resize(cropped_image, (640, 480))
     return cropped_image
 
 
@@ -65,44 +65,66 @@ def save_img(path_img, path_mask, path_pathcrop,
     mask_name_save = (mask_name + " " + str(re.sub('[:!@#$]', '_', tt) + '.png')).replace(' ', '_')
     crop_name_save = (crop_name + " " + str(re.sub('[:!@#$]', '_', tt) + '.png')).replace(' ', '_')
 
-    # cv2.imwrite(img_name_save, image)
-    # cv2.imwrite(mask_name_save, mask)
+    cv2.imwrite(img_name_save, image)
+    cv2.imwrite(mask_name_save, mask)
     cv2.imwrite(crop_name_save, cropimg)
 
 
 def seg_image(args, model, to_save=False):
-    root_images = args.path_images2crop
-    list_images = os.listdir(root_images)
-    for i in tqdm(range(len(list_images))):
-        im_root = os.path.join(root_images, str(list_images[i]))
-        image = cv2.imread(im_root)
-        w = image.shape[:2][1]
-        h = image.shape[:2][0]
+    main_root = args.path_images2crop
 
-        results = model(image)[0]
-
-        if results.masks is None:
-            continue
-        else:
-            mask = results.masks.masks[0]
-            mask = mask.detach().cpu().numpy()
-            mask = np.squeeze(mask)
-            mask = cv2.resize(mask, (w, h))
-
-            cropped = CropingMask(image, mask)
-            mask[np.where(mask > 0)] *= 255
-
-            if to_save:
-                mask_path = os.path.join(args.root_mask, str(list_images[i]))
-                crop_path = os.path.join(args.root_crop, str(list_images[i]))
-                if os.path.exists(crop_path):
-                    continue
-                else:
+    for k in range(2, 21):
+        father_root = os.path.join(main_root, str(k))
+        root_images = os.path.join(father_root, 'image')
+        list_images = os.listdir(root_images)
+        for i in tqdm(range(len(list_images))):
+            im_root = os.path.join(root_images, str(list_images[i]))
+            image = cv2.imread(im_root)
+            w = image.shape[:2][1]
+            h = image.shape[:2][0]
+            root_mask = os.path.join(father_root, 'mask')
+            root_crop = os.path.join(father_root, 'crop')
+            if not os.path.exists(root_mask):
+                os.makedirs(root_mask)
+            if not os.path.exists(root_crop):
+                os.makedirs(root_crop)
+            mask_path = os.path.join(root_mask, str(list_images[i]))
+            crop_path = os.path.join(root_crop, str(list_images[i]))
+            # if os.path.exists(crop_path):
+            #     pass
+            # else:
+            results = model(image)[0]
+            if results.masks is None:
+                mask = np.zeros((h, w, 3), dtype=np.uint8)
+                if to_save:
                     cv2.imwrite(mask_path, mask)
-                    cv2.imwrite(crop_path, cropped)
+                    cv2.imwrite(crop_path, mask)
+            else:
+                detections = sv.Detections.from_yolov8(results)
 
-        # cv2.imshow('', cropped)
-        # cv2.waitKey(0)
+                for j in detections.class_id:
+                    class_id = model.model.names[j]
+                    if class_id == 'person':
+                        where = torch.nonzero(results.boxes.cls == float(0))[0][0].item()
+
+                        mask = results.masks.masks[where]
+
+                        mask = mask.detach().cpu().numpy()
+
+                        mask = np.squeeze(mask)
+                        mask = cv2.resize(mask, (w, h))
+
+                        cropped = CropingMask(image, mask)
+                        mask[np.where(mask > 0)] *= 255
+
+                        if to_save:
+                            cv2.imwrite(mask_path, mask)
+                            cv2.imwrite(crop_path, cropped)
+                    # else:
+                    #     mask = np.zeros((h, w, 3), dtype=np.uint8)
+                    #     if to_save:
+                    #         cv2.imwrite(mask_path, mask)
+                    #         cv2.imwrite(crop_path, mask)
 
 
 def RealTime(args, model, data_size, to_save=False):
@@ -127,7 +149,7 @@ def RealTime(args, model, data_size, to_save=False):
 
                     mask = mask.detach().cpu().numpy()
                     mask = np.squeeze(mask)
-                    mask = cv2.resize(mask, (640, 480))
+                    # mask = cv2.resize(mask, (640, 480))
 
                     cropped = CropingMask(frame, mask)
                     mask[np.where(mask > 0)] *= 255
@@ -153,5 +175,5 @@ if __name__ == "__main__":
     data_size = 5000
     args_config = parser.parse_args()
     RealTime(args_config, model, data_size, to_save=False)
-    # seg_image(args_config, model, to_save=False)
+    # seg_image(args_config, model, to_save=True)
     # RealTime2(model)
