@@ -48,7 +48,7 @@ def pretrained_model_finetune(model_name, num_classes):
         for param in model.parameters():
             param.requires_grad = False
         num_features = model.classifier[6].in_features
-        model.fc = nn.Sequential(
+        model.classifier[6] = nn.Sequential(
             nn.Linear(num_features, num_classes),
             nn.Softmax()
         )
@@ -138,13 +138,13 @@ def load_model4test(model_name, num_classes, weights_path, device):
 
     elif model_name == 'EfficientNet':
         model = EfficientNet.from_name('efficientnet-b0')
-        # num_features = model._fc.in_features
+        num_features = model._fc.in_features
+        model._fc = nn.Sequential(
+            nn.Linear(num_features, num_classes),
+            nn.Softmax()
+        )
         state_dict = torch.load(weights_path)
         model.load_state_dict(state_dict)
-        # model._fc = nn.Sequential(
-        #     nn.Linear(num_features, num_classes),
-        #     nn.Softmax()
-        # )
 
     elif model_name == 'GoogLeNet':
         model = googlenet(pretrained=False)
@@ -153,13 +153,12 @@ def load_model4test(model_name, num_classes, weights_path, device):
             nn.Linear(num_features, num_classes),
             nn.Softmax()
         )
-
-        model.load_state_dict(torch.load(weights_path))
+        model.load_state_dict(torch.load(weights_path), strict=False)
 
     elif model_name == 'VGG':
         model = vgg16(pretrained=False)
         num_features = model.classifier[6].in_features
-        model.fc = nn.Sequential(
+        model.classifier[6] = nn.Sequential(
             nn.Linear(num_features, num_classes),
             nn.Softmax()
         )

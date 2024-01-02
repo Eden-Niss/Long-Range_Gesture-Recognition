@@ -1,9 +1,6 @@
 from __future__ import print_function
-import time
-from tqdm import tqdm
 from torchvision import transforms
 import cv2
-import os
 import numpy as np
 import torch
 from Hourglass.Hourglass_SR import Hourglass
@@ -49,18 +46,20 @@ def zoom_in(net, output_layers, sr_transform, sr_model, image, device):
             class_id = np.argmax(scores)
             confidence = scores[class_id]
             if confidence > 0.5:  # Adjust the confidence threshold as desired
-                center_x = int(detection[0] * image.shape[1])
-                center_y = int(detection[1] * image.shape[0])
-                w = int(detection[2] * image.shape[1])
-                h = int(detection[3] * image.shape[0])
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-                boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
+                if class_id==0:
+                    center_x = int(detection[0] * image.shape[1])
+                    center_y = int(detection[1] * image.shape[0])
+                    w = int(detection[2] * image.shape[1])
+                    h = int(detection[3] * image.shape[0])
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
+                    boxes.append([x, y, w, h])
+                    confidences.append(float(confidence))
+                    class_ids.append(class_id)
 
     # Select the bounding box with the highest confidence
     if not confidences:
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         return image
     else:
         max_confidence_idx = np.argmax(confidences)
@@ -138,7 +137,7 @@ SR_model.eval()
 # -----------
 num_classes = 6
 model_class_name = 'DenseNet'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/07_26_2023/10_net_Wed_Jul_26_14_58_42_2023.pt'
+weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/09_06_2023/9_net_Wed_Sep__6_18_40_49_2023.pt'
 transform_class = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((224, 224)),
@@ -151,6 +150,7 @@ model_class.eval()
 # OPEN CAMERA AND START CLASSIFYING
 # -------------
 cap = cv2.VideoCapture(0)
+
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -162,6 +162,7 @@ while True:
     frame_zoomed_in = zoom_in(net, output_layers, SR_transform, SR_model, frame, device)
     new_frame = cv2.cvtColor(np.array(frame_zoomed_in), cv2.COLOR_RGB2BGR)
     gesture_name, conf = realtime_gesture_class(frame_zoomed_in, model_class, transform_class)
+    # print(gesture_name)
 
     cv2.putText(new_frame,
                 gesture_name + " " + conf,
@@ -179,5 +180,21 @@ cv2.destroyAllWindows()
 
 
 
-
+#  try on image:
+# font = cv2.FONT_HERSHEY_SIMPLEX
+# img = cv2.imread('/home/roblab20/PycharmProjects/LongRange/20230810_145226.jpg')
+# frame_zoomed_in = zoom_in(net, output_layers, SR_transform, SR_model, img, device)
+# new_frame = cv2.cvtColor(np.array(frame_zoomed_in), cv2.COLOR_RGB2BGR)
+# gesture_name, conf = realtime_gesture_class(frame_zoomed_in, model_class, transform_class)
+# cv2.putText(new_frame,
+#                 gesture_name + " " + conf,
+#                 (50, 70),
+#                 font, 2.4,
+#                 # (253, 46, 62),
+#                 (0, 0, 255),
+#                 3,
+#                 cv2.LINE_AA)
+# cv2.imshow('Classify', new_frame)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
