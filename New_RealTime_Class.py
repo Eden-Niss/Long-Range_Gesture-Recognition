@@ -25,9 +25,6 @@ def super_resolution(input, sr_transform, sr_model, device):
         sr_frame = (sr_frame * 255).astype(np.uint8)
         sr_frame = Image.fromarray(sr_frame)
 
-        enhancer = ImageEnhance.Sharpness(sr_frame)
-        sr_frame = enhancer.enhance(1.5)
-
         return sr_frame
 
 
