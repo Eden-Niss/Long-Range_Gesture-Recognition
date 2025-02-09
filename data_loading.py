@@ -10,22 +10,10 @@ from sklearn.model_selection import train_test_split
 def get_filepaths(path):
     name_img = []
     for root, directories, files in os.walk(path):
-        if root.endswith('crop'):
+        if root.endswith('image'):
             for filename in files:
                 name_img.append(os.path.join(root, filename))
     return name_img
-
-#
-# def pre_processing(name_pkl):
-#     dis = []
-#     img_name = []
-#     Dtrain = []
-#     for cat in name_pkl:
-#         meter_data = pickle.load(file=open(cat, "rb"))
-#         Dtrain.append(meter_data)
-#         # dis.append(meter_data['distance'])
-#         # img_name.append(meter_data['id_name'])
-#     return meter_data
 
 
 class ClassDataset(Dataset):
@@ -35,20 +23,15 @@ class ClassDataset(Dataset):
         self.transform = transform
         self.input_types = input_types
         self.images = img_list
+        self.I_matrix = torch.eye(len(input_types))
 
     def __len__(self):
         return len(self.images)
 
     def __getitem__(self, index):
-        image_class = self.images[index].split("/")[-1].split("_")[0]
-        I_matrix = torch.eye(len(self.input_types))
-        label = I_matrix[self.input_types.index(image_class)]
-        for i in range(1, 21):
-            full_path = self.images[index]
-            if os.path.exists(full_path):
-                image_path = full_path
-            else:
-                continue
+        image_path = self.images[index]
+        image_class = image_path.split("/")[-1].split("_")[0]
+        label = self.I_matrix[self.input_types.index(image_class)]
         img = Image.open(image_path)
         if self.transform:
             img = self.transform(img)
@@ -60,8 +43,6 @@ def data_loaders(args):
             'train':
                 transforms.Compose([
                     transforms.Resize((args.img_size, args.img_size)),
-                    transforms.ColorJitter(brightness=.5, hue=.3),
-                    transforms.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
                     transforms.ToTensor(),
                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                 ]),

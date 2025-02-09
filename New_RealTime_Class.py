@@ -7,6 +7,7 @@ from Hourglass.Hourglass_SR import Hourglass
 from PIL import Image, ImageEnhance, ImageFilter
 import torch.nn as nn
 from pretrained_models import load_model4test
+import time
 
 
 def super_resolution(input, sr_transform, sr_model, device):
@@ -24,6 +25,9 @@ def super_resolution(input, sr_transform, sr_model, device):
         sr_frame = np.clip(sr_frame, 0, 1)
         sr_frame = (sr_frame * 255).astype(np.uint8)
         sr_frame = Image.fromarray(sr_frame)
+        
+        # enhancer = ImageEnhance.Sharpness(sr_frame)
+        # sr_frame = enhancer.enhance(1.5)
 
         return sr_frame
 
@@ -86,7 +90,7 @@ def zoom_in(net, output_layers, sr_transform, sr_model, image, device):
 
 
 def realtime_gesture_class(input, model, transform):
-    gestures_dict = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4, 'Come': 5}
+    gestures_dict = {'None': 0, 'Point': 1, 'T-Down': 2, 'T-Up': 3, 'Stop': 4, 'Beckoning': 5}
     if input is None:
         gesture_name = "None"
         conf = '1'
@@ -134,7 +138,7 @@ SR_model.eval()
 # -----------
 num_classes = 6
 model_class_name = 'DenseNet'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/09_06_2023/9_net_Wed_Sep__6_18_40_49_2023.pt'
+weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt'
 transform_class = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((224, 224)),
@@ -155,7 +159,9 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 if not cap.isOpened():
     print("Error: Could not open video device")
 while True:
+    start_time = time.time()
     ret, frame = cap.read()
+
     frame_zoomed_in = zoom_in(net, output_layers, SR_transform, SR_model, frame, device)
     new_frame = cv2.cvtColor(np.array(frame_zoomed_in), cv2.COLOR_RGB2BGR)
     gesture_name, conf = realtime_gesture_class(frame_zoomed_in, model_class, transform_class)
@@ -164,11 +170,23 @@ while True:
     cv2.putText(new_frame,
                 gesture_name + " " + conf,
                 (50, 70),
-                font, 2.4,
-                # (253, 46, 62),
+                font, 1.5,
                 (0, 0, 255),
-                3,
+                2,
                 cv2.LINE_AA)
+
+    end_time = time.time()
+    fps = 1.0 / (end_time - start_time)
+    # print("FPS:", fps)
+
+    cv2.putText(new_frame,
+                str(round(fps)) + " fps",
+                (50, 500),
+                font, 1,
+                (0, 0, 255),
+                2,
+                cv2.LINE_AA)
+
     cv2.imshow('Classify', new_frame)
     if cv2.waitKey(5) & 0xFF == 27:
         break

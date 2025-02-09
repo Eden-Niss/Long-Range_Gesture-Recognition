@@ -47,6 +47,61 @@ class CNN(nn.Module):
             nn.MaxPool2d(2, 2)
         )
         self.fc = nn.Sequential(
+            nn.Linear(512 * 5 * 5, 256),  # 12800
+            nn.LeakyReLU(),
+            nn.Linear(256, 32),
+            nn.LeakyReLU(),
+            nn.Linear(32, 6),
+            nn.Softmax()
+        )
+        self.to(device)
+
+    def forward(self, x):
+        # Block 1
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = torch.flatten(x, 1)
+        output = self.fc(x)
+        return output
+
+
+class CNN2(nn.Module):
+    def __init__(self, device):
+        super(CNN2, self).__init__()
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(3, 32, 3),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(32, 64, 3),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(64, 128, 3),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(128, 256, 3),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(256, 512, 3),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2)
+        )
+        self.fc = nn.Sequential(
             nn.Linear(512 * 5 * 5, 64),  # 12800
             nn.ReLU(),
             nn.Linear(64, 4),
@@ -79,7 +134,7 @@ def train(args, model, train_dataloader, val_dataloader):
     criterion = nn.CrossEntropyLoss()
     best_acc = -np.inf
 
-    scheduler = ReduceLROnPlateau(optimizer, 'min', patience=7)
+    # scheduler = ReduceLROnPlateau(optimizer, 'min', patience=7)
 
     # wandb.watch(model, log_freq=100)
 
@@ -161,7 +216,7 @@ def train(args, model, train_dataloader, val_dataloader):
             best_weights = copy.deepcopy(model.state_dict())
             best_weights_path = save_net(args.saveM_path, best_weights, str(epoch+1))
 
-        scheduler.step(mean_val_loss)
+        # scheduler.step(mean_val_loss)
 
     print(f'\nBest validation accuracy: {best_acc}')
     print(f'\nBest weights can be found here: {best_weights_path}')

@@ -1,6 +1,6 @@
 import torch
 from data_loading import data_loaders
-from Gesture_class import CNN
+from Gesture_class import CNN2
 import argparse
 import warnings
 import torch.nn as nn
@@ -11,24 +11,24 @@ warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser(description='Test Config', add_help=False)
 
-parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
+parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE_SR', metavar='DIR',
                     help='path to training dataset')
 parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
+parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE_SR', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--root_checkpoint', default=r'checkpoint/Wide_ResNet/crop/05_30_2023/20_net_Tue_May_30_06_14_57_2023.pt',
+parser.add_argument('--root_checkpoint', default=r'/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt',
                     metavar='DIR', help='path to training dataset')
 parser.add_argument('--img_size', type=int, default=224, metavar='Size',
                     help='Image size for resize')
 parser.add_argument('--batch_size', type=int, default=1, metavar='N',
                     help='input batch size for training (default: 16)')
-parser.add_argument("--drop_last", default=True, type=str)
+parser.add_argument("--drop_last", default=False, type=str)
 parser.add_argument('--num_classes', type=int, default=6,
                     help='Number of classes to classify')
-parser.add_argument('--pretrained', default=True, type=bool,
+parser.add_argument('--pretrained', default=False, type=bool,
                     help='Use pretrained model. (default: false)')
-parser.add_argument('--pretrained_model', default='Wide_ResNet', type=str,
+parser.add_argument('--pretrained_model', default='DenseNet', type=str,
                     help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
 parser.add_argument('-j', '--workers', type=int, default=1, metavar='N',
                     help='how many training processes to use (default: 2)')
@@ -79,10 +79,9 @@ if __name__ == "__main__":
     model_path = args_config.root_checkpoint
 
     if args_config.pretrained:
-        model = load_model4test(args_config.pretrained_model, args_config.num_classes, args_config.root_checkpoint)
-        model.to(device)
+        model = load_model4test(args_config.pretrained_model, args_config.num_classes, args_config.root_checkpoint, device)
     else:
-        model = CNN(device)
+        model = CNN2(device)
         model.load_state_dict(torch.load(model_path, map_location=device))
 
     model.eval()

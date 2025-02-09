@@ -1,7 +1,8 @@
 import argparse
 import logging
-from Gesture_class import CNN, train
-from dataloader import data_loaders
+from Gesture_class import CNN2, train
+# from dataloader import data_loaders
+from data_loading import data_loaders
 # from data_loading import data_loaders
 from pretrained_models import pretrained_model_finetune, pretrained_model_whole
 import wandb
@@ -10,37 +11,42 @@ from utils import test
 
 parser = argparse.ArgumentParser(description='Training Config', add_help=False)
 
-parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', metavar='DIR',
+parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all_new2.csv', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
-                    help='path to csv dataset')
-parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE', metavar='DIR',
-                    help='path to training dataset')
+parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/sr_data',
+                    metavar='DIR',  help='path to csv dataset')
+parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/sr_data',
+                    metavar='DIR', help='path to training dataset')
 parser.add_argument('--root_val', default=r'', metavar='DIR',
                     help='path to training dataset')
-parser.add_argument('--saveM_path', default=r'/home/roblab20/PycharmProjects/LongRange/checkpoint/EfficientNet', metavar='DIR',
-                    help='path for save the weights in optimizer of the model')
+parser.add_argument('--saveM_path', default=r'/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune',
+                    metavar='DIR', help='path for save the weights in optimizer of the model')
 parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='input batch size for training (default: 16)')
 parser.add_argument('--criterion', default=r'rmse', metavar='CRI',
                     help='Criterion loss. (default: rmse)')
-parser.add_argument('--num_classes', type=int, default=5,
+parser.add_argument('--num_classes', type=int, default=6,
                     help='Number of classes to classify')
 
 # Optimizer parameters
-parser.add_argument('--beta1', default=0.9, type=float,
+parser.add_argument('--beta1', default=0.9156267464451984, type=float,
                     help='Optimizer beta1')
-parser.add_argument('--beta2', default=0.999, type=float,
+parser.add_argument('--beta2', default=0.9695956190145288, type=float,
                     help='Optimizer beta2')
-parser.add_argument('--weight_decay', type=float, default=0.005,
+parser.add_argument('--weight_decay', type=float, default=0.08,
                     help='weight decay')
+
 parser.add_argument('--optim', type=str, default='Adam',
                     help='define optimizer type')
 parser.add_argument('--scheduler', default='step', type=str, metavar='SCHEDULER',
                     help='LR scheduler (default: "step"')
-parser.add_argument('--lr', type=float, default=0.0001, metavar='LR',
+
+# parser.add_argument('--lr', type=float, default=0.00184446, metavar='LR',
+#                     help='learning rate')
+parser.add_argument('--lr', type=float, default=1.1697595319788407e-05, metavar='LR',
                     help='learning rate')
-parser.add_argument('--epochs', type=int, default=60, metavar='N',
+
+parser.add_argument('--epochs', type=int, default=15, metavar='N',
                     help='number of epochs to train (default: 2)')
 
 # # Misc
@@ -59,15 +65,16 @@ parser.add_argument('--device', type=str, default='cuda:0',
 parser.add_argument("--drop_last", default=True, type=str)
 parser.add_argument('--pretrained', default=True, type=bool,
                     help='Use pretrained model. (default: false)')
-parser.add_argument('--fine_tune', default=True, type=bool,
+parser.add_argument('--fine_tune', default=False, type=bool,
                     help='Use pretrained model. (default: false)')
-parser.add_argument('--pretrained_model', default='EfficientNet', type=str,
+parser.add_argument('--pretrained_model', default='DenseNet', type=str,
                     help='Pretrained model can be either: DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet')
 
 
 def main(args_config):
-    classes = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4}
-    train_dataloader, val_dataloader, test_dataloader = data_loaders(args_config, classes)
+    classes = {'None': 0, 'Point': 1, 'Bad': 2, 'Good': 3, 'Stop': 4, 'Come': 5}
+    # train_dataloader, val_dataloader, test_dataloader = data_loaders(args_config, classes)
+    train_dataloader, val_dataloader, test_dataloader = data_loaders(args_config)
 
     if args_config.pretrained:
         if args_config.fine_tune:
@@ -76,7 +83,7 @@ def main(args_config):
             model = pretrained_model_whole(args_config.pretrained_model, args_config.num_classes)
         model.to(args_config.device)
     else:
-        model = CNN(args_config.device)
+        model = CNN2(args_config.device)
 
     try:
         train(args_config, model, train_dataloader, val_dataloader) #train_dataloader
