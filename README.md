@@ -1,11 +1,15 @@
 # Ultra-Range Gesture Recognition 
 
+---
+
 Hand gestures play a crucial role in human interactions and serve as an efficient means of 
 communication in **Human-Robot Interaction (HRI)**. This repository presents the **Ultra-Range Gesture 
 Recognition (URGR) framework**, designed to recognize gestures from distances of up to **25 meters** 
 using a deep-learning model and a simple RGB camera. 
 
-📹 **Watch the demo:** [![Watch the video](https://img.youtube.com/vi/dw8BTe6PuDc/0.jpg)](https://youtu.be/dw8BTe6PuDc?si=tIfFZgjCZKYmSi2Q)
+📹 **Watch the demo:** 
+
+[![Watch the video](https://img.youtube.com/vi/dw8BTe6PuDc/0.jpg)](https://youtu.be/dw8BTe6PuDc?si=tIfFZgjCZKYmSi2Q)
 
 This repository is based on our paper:  
 📄 **Ultra-Range Gesture Recognition using a Web-Camera in Human-Robot Interaction** (2024).  
