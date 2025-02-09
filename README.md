@@ -82,10 +82,10 @@ The model outperforms traditional gesture recognition methods, even at ultra-ran
 ---
 
 ## 🔥 My Contribution
-- Designed and implemented the **HQ-Hourglass** model for super-resolution enhancement.
-- Developed the **gesture classification pipeline** and benchmarked against several well-known models.
-- Improved real-world accuracy to **98.1%**, outperforming human recognition in ultra-range conditions.
-- Conducted extensive **testing on quadruped robots** in challenging environments.
+- **Developed the HQ-Hourglass model** to enhance low-resolution images, improving gesture classification at long distances.
+- **Designed the full gesture classification pipeline**, integrating YOLOv3 for person detection and HQNet for super-resolution.
+- **Improved accuracy to 98.1%**, outperforming human recognition in ultra-range conditions.
+- Conducted extensive **testing on quadruped robots** in challenging environments, achieving a 96% real-world accuracy.
 
 ---
 
