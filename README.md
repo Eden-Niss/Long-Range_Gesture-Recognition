@@ -9,7 +9,12 @@ using a deep-learning model and a simple RGB camera.
 
 📹 **Watch the demo:** 
 
-[![Watch the video](https://img.youtube.com/vi/dw8BTe6PuDc/0.jpg)](https://youtu.be/dw8BTe6PuDc?si=tIfFZgjCZKYmSi2Q)
+
+<p align="center">
+  <a href="https://youtu.be/dw8BTe6PuDc?si=tIfFZgjCZKYmSi2Q">
+    <img src="https://img.youtube.com/vi/dw8BTe6PuDc/0.jpg" width="250">
+  </a>
+</p>
 
 This repository is based on our paper:  
 📄 **Ultra-Range Gesture Recognition using a Web-Camera in Human-Robot Interaction** (2024).  
