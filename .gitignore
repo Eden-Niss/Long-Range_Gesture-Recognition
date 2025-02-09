@@ -11,6 +11,8 @@
 *.rar
 *.pkl
 *.jpg
-png2JSON.py
-BSRGAN/
-SwinIR/
+GViT/
+yolo_pt/
+VitGNC/
+old/
+arm_seg/
