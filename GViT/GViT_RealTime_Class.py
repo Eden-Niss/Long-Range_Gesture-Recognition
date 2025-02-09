@@ -139,7 +139,7 @@ SR_model.eval()
 # -----------
 num_classes = 6
 model_class_name = 'DenseNet'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/07_26_2023/10_net_Wed_Jul_26_14_58_42_2023.pt'
+weights_class_root = '/home/roblab20/PycharmProjects/LongRange/GViT/checkpoint/08_10_2023/20_net_Thu_Aug_10_19_24_14_2023.pt'
 transform_class = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((224, 224)),
@@ -184,6 +184,22 @@ cap.release()
 cv2.destroyAllWindows()
 
 
-
+#  try in image:
+# font = cv2.FONT_HERSHEY_SIMPLEX
+# img = cv2.imread('/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE/Good/20/image/Good_10_Thu_May_11_16_26_07_2023.png')
+# frame_zoomed_in = zoom_in(net, output_layers, SR_transform, SR_model, img, device)
+# new_frame = cv2.cvtColor(np.array(frame_zoomed_in), cv2.COLOR_RGB2BGR)
+# gesture_name, conf = realtime_gesture_class(frame_zoomed_in, model_class, transform_class, edge_index)
+# cv2.putText(new_frame,
+#                 gesture_name + " " + conf,
+#                 (50, 70),
+#                 font, 2.4,
+#                 # (253, 46, 62),
+#                 (0, 0, 255),
+#                 3,
+#                 cv2.LINE_AA)
+# cv2.imshow('Classify', new_frame)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
 

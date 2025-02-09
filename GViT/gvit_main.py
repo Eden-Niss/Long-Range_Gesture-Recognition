@@ -39,7 +39,7 @@ parser.add_argument('--scheduler', default='step', type=str, metavar='SCHEDULER'
 parser.add_argument('--lr', type=float, default=3.0463250121082123e-06, metavar='LR',
                     help='learning rate')
 
-parser.add_argument('--epochs', type=int, default=10, metavar='N',
+parser.add_argument('--epochs', type=int, default=20, metavar='N',
                     help='number of epochs to train (default: 2)')
 
 # # Misc

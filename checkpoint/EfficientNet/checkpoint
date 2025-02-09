@@ -1,0 +1,24 @@
+Best validation accuracy: 0.9974250936329588
+05_16_2023/47_net_Tue_May_16_23_58_13_2023.pt
+
+
+Test CE: 1.4836528251846588. Test Accuracy: 0.5741181410974244
+crop/05_21_2023/18_net_Sun_May_21_17_56_03_2023.pt
+
+
+------------------------------------------
+
+Test CE: 1.1196756095928948. Test Accuracy: 0.9562569988801791
+/crop/05_31_2023/18_net_Wed_May_31_15_12_27_2023.pt  (0.01 weight decay)
+
+
+####################
+SR DATASET:
+----------
+
+EfficientNet/SR_images/finetune/07_26_2023/7_net_Wed_Jul_26_16_28_13_2023.pt
+Best validation accuracy: 0.3537578492935636
+
+
+EfficientNet/SR_images/no_finetune/07_26_2023/6_net_Wed_Jul_26_19_17_31_2023.pt
+Test Accuracy: 0.956

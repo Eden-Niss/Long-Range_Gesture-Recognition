@@ -1,0 +1,34 @@
+38_net_Mon_May_15_17_21_53_2023.pt
+Best validation accuracy: 0.5468164794007491
+Epoch val loss: 1.141
+
+Test CE: 1.4245094780425342. Test Accuracy: 0.6262597984322509
+crop/05_22_2023/19_net_Mon_May_22_15_43_07_2023.pt
+
+
+Test CE: 1.3181634304371286. Test Accuracy: 0.7261338185890257
+/crop/05_29_2023/20_net_Mon_May_29_16_12_23_2023.pt (0.04 weight decay)
+
+
+Best validation accuracy: 0.7531871890547264
+crop/05_29_2023/19_net_Mon_May_29_22_43_59_2023.pt (0.03 weight decay)
+
+
+Test CE: 1.2143138648414398. Test Accuracy: 0.828107502799552
+crop/05_30_2023/20_net_Tue_May_30_20_53_09_2023.pt (0.01 weight decay)
+
+
+Best validation accuracy: 0.7810167910447762
+/crop/06_04_2023/17_net_Sun_Jun__4_16_22_55_2023.pt  (0.02 weight decay)
+
+
+##########################################
+SR DATASET:
+-------------
+FineTune:
+VGG/SR_images/finetune/08_02_2023/7_net_Wed_Aug__2_11_10_13_2023.pt
+Best validation accuracy: 0.4997
+
+
+
+

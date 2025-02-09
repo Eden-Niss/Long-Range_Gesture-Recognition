@@ -1,0 +1,44 @@
+22_net_Sun_May_14_17_09_37_2023.pt
+
+validation: 45%
+
+-------------------------------------
+
+Epoch train loss: 0.9241229449545031, Epoch val loss: 0.9131601484080826
+Epoch train acc: 0.9984274277396548, Epoch val acc: 0.9996488764044944
+
+/05_17_2023/14_net_Wed_May_17_14_09_44_2023.pt
+
+-------------------------------------
+
+Test CE: 1.439142019591166. Test Accuracy: 0.615481522956327
+crop/05_22_2023/20_net_Mon_May_22_13_40_12_2023.pt
+
+-------------------------------------
+
+Test CE: 1.2098163850897503. Test Accuracy: 0.9577967525195968 
+crop/05_28_2023/20_net_Sun_May_28_11_45_13_2023.pt  (not finetune)
+
+
+-------------------------------------
+Epoch train loss: 1.123940668328063, Epoch val loss: 1.084980232205557
+Epoch train acc: 0.9716380024865313, Epoch val acc: 0.9807213930348259
+
+/home/roblab20/PycharmProjects/LongRange/checkpoint/GoogLeNet/crop/06_13_2023/7_net_Tue_Jun_13_14_57_44_2023.pt  (not finetune)
+
+
+-------------------------------------
+#####################################
+WITH HG MODEL FOR SR:
+####################################
+
+Best validation accuracy: 0.36911302982731553 (Finetune, 0.08 weight decay)
+SR_images/07_19_2023/6_net_Wed_Jul_19_13_57_15_2023.pt
+
+Test Accuracy: 0.7312971708522752 (Not finetuned, 0.08 weight decay)
+checkpoint/GoogLeNet/SR_images/07_19_2023/5_net_Wed_Jul_19_17_26_38_2023.pt
+
+
+
+
+
