@@ -4,7 +4,7 @@ from Gesture_class import CNN2
 import argparse
 import warnings
 import torch.nn as nn
-from pretrained_models import load_model4test
+from models import load_model4test
 from tqdm import tqdm
 
 warnings.filterwarnings("ignore")

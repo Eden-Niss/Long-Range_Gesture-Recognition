@@ -4,7 +4,7 @@ from Gesture_class import CNN2, train
 # from dataloader import data_loaders
 from data_loading import data_loaders
 # from data_loading import data_loaders
-from pretrained_models import pretrained_model_finetune, pretrained_model_whole
+from models import pretrained_model_finetune, pretrained_model_whole
 import wandb
 from utils import test
 

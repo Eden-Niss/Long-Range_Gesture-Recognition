@@ -6,7 +6,7 @@ import torch
 from HQ_Hourglass.Hourglass_SR import Hourglass
 from PIL import Image, ImageEnhance, ImageFilter
 import torch.nn as nn
-from pretrained_models import load_model4test
+from models import load_model4test
 import time
 
 
