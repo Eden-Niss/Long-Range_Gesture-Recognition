@@ -19,3 +19,5 @@ arm_seg/
 *.weights
 *cfg
 checkpoint/
+__pycache__/
+Hourglass/__pycache__/
