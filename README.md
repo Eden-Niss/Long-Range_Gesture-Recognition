@@ -42,9 +42,9 @@ Our framework processes gestures in three key steps:
 [//]: # (to benchmark our prime model from the paper.)
 
 <p align="center">
-  <img src="HQ-Hourglass/HQ_Examples/original.png" width="200">
-  <img src="HQ-Hourglass/HQ_Examples/cropped.png" width="150">
-  <img src="HQ-Hourglass/HQ_Examples/HQ.png" width="150">
+  <img src="HQ-Hourglass/HQ_Examples/original.png" width="250">
+  <img src="HQ-Hourglass/HQ_Examples/cropped.png" width="187">
+  <img src="HQ-Hourglass/HQ_Examples/HQ.png" width="187">
 </p>
 
 <p align="center">
