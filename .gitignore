@@ -16,3 +16,4 @@ yolo_pt/
 VitGNC/
 old/
 arm_seg/
+*.weights
