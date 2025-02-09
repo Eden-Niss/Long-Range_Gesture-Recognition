@@ -13,13 +13,13 @@ parser = argparse.ArgumentParser(description='Training Config', add_help=False)
 
 parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all_new2.csv', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/sr_data',
+parser.add_argument('--img_root', default=r'data/sr_data',
                     metavar='DIR',  help='path to csv dataset')
-parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/sr_data',
+parser.add_argument('--root_train', default=r'data/sr_data',
                     metavar='DIR', help='path to training dataset')
 parser.add_argument('--root_val', default=r'', metavar='DIR',
                     help='path to training dataset')
-parser.add_argument('--saveM_path', default=r'/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune',
+parser.add_argument('--saveM_path', default=r'checkpoint/DenseNet/SR_images/no_finetune',
                     metavar='DIR', help='path for save the weights in optimizer of the model')
 parser.add_argument('--batch_size', type=int, default=16, metavar='N',
                     help='input batch size for training (default: 16)')

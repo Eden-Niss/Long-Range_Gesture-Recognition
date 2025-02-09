@@ -112,9 +112,9 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # YOLO
 # -------
-data_dir = '/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE'
-yolo_conf = '/home/roblab20/PycharmProjects/LongRange/yolo_pt/yolov3.cfg'
-yolo_weights = '/home/roblab20/PycharmProjects/LongRange/yolo_pt/yolov3.weights'
+data_dir = 'data/data_LongRANGE'
+yolo_conf = 'yolo_pt/yolov3.cfg'
+yolo_weights = '/yolo_pt/yolov3.weights'
 
 net = cv2.dnn.readNetFromDarknet(yolo_conf, yolo_weights)
 layer_names = net.getLayerNames()
@@ -128,7 +128,7 @@ SR_transform = transforms.Compose([
 SR_model = Hourglass()
 SR_model = nn.DataParallel(SR_model)
 
-wights_SR_path = '/home/roblab20/PycharmProjects/LongRange/Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
+wights_SR_path = 'Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
 SR_model.load_state_dict(torch.load(wights_SR_path, map_location=device))
 
 SR_model.to(device)
@@ -138,7 +138,7 @@ SR_model.eval()
 # -----------
 num_classes = 6
 model_class_name = 'DenseNet'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-weights_class_root = '/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt'
+weights_class_root = 'checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt'
 transform_class = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((224, 224)),

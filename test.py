@@ -11,13 +11,13 @@ warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser(description='Test Config', add_help=False)
 
-parser.add_argument('--root_train', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE_SR', metavar='DIR',
+parser.add_argument('--root_train', default=r'/data/data_LongRANGE_SR', metavar='DIR',
                     help='path to training dataset')
 parser.add_argument('--csv_root', default=r'data/LongeRange_CSV/data_all.csv', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--img_root', default=r'/home/roblab20/PycharmProjects/LongRange/data/data_LongRANGE_SR', metavar='DIR',
+parser.add_argument('--img_root', default=r'/data/data_LongRANGE_SR', metavar='DIR',
                     help='path to csv dataset')
-parser.add_argument('--root_checkpoint', default=r'/home/roblab20/PycharmProjects/LongRange/checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt',
+parser.add_argument('--root_checkpoint', default=r'checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt',
                     metavar='DIR', help='path to training dataset')
 parser.add_argument('--img_size', type=int, default=224, metavar='Size',
                     help='Image size for resize')

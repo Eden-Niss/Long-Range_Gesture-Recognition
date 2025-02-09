@@ -84,7 +84,7 @@ def data_loaders(args):
 
 
 if __name__ == '__main__':
-    path = r'/home/roblab20/PycharmProjects/PointClassification/data_rearranged/train'
+    path = r''
     data_loaders(path, img_size=224)
 
 
