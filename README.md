@@ -12,7 +12,7 @@ using a deep-learning model and a simple RGB camera.
 
 <p align="center">
   <a href="https://youtu.be/dw8BTe6PuDc?si=tIfFZgjCZKYmSi2Q">
-    <img src="https://img.youtube.com/vi/dw8BTe6PuDc/0.jpg" width="400">
+    <img src="https://i.ytimg.com/vi/dw8BTe6PuDc/maxresdefault.jpg" width="400">
   </a>
 </p>
 
