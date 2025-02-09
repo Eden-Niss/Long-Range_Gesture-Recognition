@@ -20,4 +20,4 @@ arm_seg/
 *cfg
 checkpoint/
 __pycache__/
-Hourglass/__pycache__/
+HQ-Hourglass/__pycache__/

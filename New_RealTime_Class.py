@@ -128,7 +128,7 @@ SR_transform = transforms.Compose([
 SR_model = Hourglass()
 SR_model = nn.DataParallel(SR_model)
 
-wights_SR_path = 'Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
+wights_SR_path = 'HQ-Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
 SR_model.load_state_dict(torch.load(wights_SR_path, map_location=device))
 
 SR_model.to(device)
