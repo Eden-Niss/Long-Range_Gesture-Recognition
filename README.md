@@ -43,7 +43,7 @@ Our framework processes gestures in three key steps:
 
 🔹 **Super-Resolution Enhancement:**  
    - Due to the long distance, the user's image is low-quality.  
-   - We apply **HQ-Hourglass**, a super-resolution model, to enhance the cropped image.
+   - We apply **HQNet**, a super-resolution model, to enhance the cropped image.
 
 🔹 **Gesture Classification:**  
    - A classification model predicts the user's gesture.
@@ -56,7 +56,7 @@ Our framework processes gestures in three key steps:
 </p>
 
 <p align="center">
-  <b>Original Image</b> | <b>After YOLOv3 Cropping</b> | <b>After HQ-Hourglass Super-Resolution</b>
+  <b>Original Image</b> | <b>After YOLOv3 Cropping</b> | <b>After HQNet Super-Resolution</b>
 </p>
 
 ---
