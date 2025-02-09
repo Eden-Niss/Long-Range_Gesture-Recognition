@@ -18,3 +18,4 @@ old/
 arm_seg/
 *.weights
 *cfg
+checkpoint/
