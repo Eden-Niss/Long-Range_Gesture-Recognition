@@ -20,6 +20,18 @@ This repository is based on our paper:
 📄 **Ultra-Range Gesture Recognition using a Web-Camera in Human-Robot Interaction** (2024).  
 [🔗 Read the full article](https://www.sciencedirect.com/science/article/pii/S0952197624006018)
 
+---
+
+## 🚀 Quick Start  
+This project demonstrates **Ultra-Range Gesture Recognition (URGR)**, detecting gestures up to **25 meters** away using deep learning.
+
+### **How to Run the Model**
+To test the model, please **contact me** to obtain the necessary checkpoints.
+Once you have the checkpoints, run the following command:
+
+```sh
+python New_RealTime_Class.py
+```
 
 ---
 
@@ -34,17 +46,8 @@ Our framework processes gestures in three key steps:
    - We apply **HQ-Hourglass**, a super-resolution model, to enhance the cropped image.
 
 🔹 **Gesture Classification:**  
-   - A classification model predicts the user's gesture.  
-   - This repository includes a **DenseNet** classifier and other well-known models.
+   - A classification model predicts the user's gesture.
 
-
-[//]: # (As a part of our work to comparing models, this repository demonstrates an employment of a simple HQ model)
-
-[//]: # (names HQ-Hourglass, to improve the image quality of a long distance images, and a DenseNet model to predict )
-
-[//]: # (the gesture of the user. More well-known classification models were used in order )
-
-[//]: # (to benchmark our prime model from the paper.)
 
 <p align="center">
   <img src="HQ-Hourglass/HQ_Examples/original.png" width="250">
@@ -56,14 +59,50 @@ Our framework processes gestures in three key steps:
   <b>Original Image</b> | <b>After YOLOv3 Cropping</b> | <b>After HQ-Hourglass Super-Resolution</b>
 </p>
 
+---
 
+## 📊 Results & Performance
 
+The URGR framework achieves:
+
+✅ **98.1% recognition accuracy** on diverse test data  
+✅ **96% recognition accuracy** in real-world tests with an autonomous quadruped robot  
+
+### **Benchmarking Against Other Models**
+| Model            | Accuracy | 
+|------------------|----------|
+| DenseNet         | 92.1%    | 
+| EfficientNet     | 87.5%    | 
+| GoogLeNet        | 84.1%    | 
+| WideResNet       | 89.8%    | 
+| GViT (our model) | **98.1** | 
+
+The model outperforms traditional gesture recognition methods, even at ultra-range distances.
+
+---
+
+## 🔥 My Contribution
+- Designed and implemented the **HQ-Hourglass** model for super-resolution enhancement.
+- Developed the **gesture classification pipeline** and benchmarked against several well-known models.
+- Improved real-world accuracy to **98.1%**, outperforming human recognition in ultra-range conditions.
+- Conducted extensive **testing on quadruped robots** in challenging environments.
+
+---
 
 ## 📜 Citation
+⚠️ **Disclaimer**  
+This repository is **not the official implementation** of our paper  
+["Ultra-Range Gesture Recognition using a Web-Camera in Human-Robot Interaction"](https://www.sciencedirect.com/science/article/pii/S0952197624006018).  
+Instead, this repository includes **a different version** used for **training and benchmarking 
+purposes** to compare against the model described in the paper.  
+
+At this time, there is no publicly available repository for the official implementation.  
+
 If you use this work, please cite:
 
 **Eran Bamani and Eden Nissinman**, *Ultra-Range Gesture Recognition using a Web-Camera in Human-Robot Interaction*, **Engineering Applications of Artificial Intelligence**, 2024.  
 🔗 [Read the full paper](https://www.sciencedirect.com/science/article/pii/S0952197624006018)
+
 
 ### **BibTeX:**
 ```bibtex
@@ -74,3 +113,5 @@ If you use this work, please cite:
   doi = {https://doi.org/10.1016/j.engappai.2024.108443},
   author = {Eran Bamani and Eden Nissinman and Inbar Meir and Lisa Koenigsberg and Avishai Sintov},
 }
+```
+

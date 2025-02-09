@@ -3,7 +3,7 @@ from torchvision import transforms
 import cv2
 import numpy as np
 import torch
-from Hourglass.Hourglass_SR import Hourglass
+from HQ_Hourglass.Hourglass_SR import Hourglass
 from PIL import Image, ImageEnhance, ImageFilter
 import torch.nn as nn
 from pretrained_models import load_model4test
@@ -128,7 +128,7 @@ SR_transform = transforms.Compose([
 SR_model = Hourglass()
 SR_model = nn.DataParallel(SR_model)
 
-wights_SR_path = 'HQ-Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
+wights_SR_path = 'HQ_Hourglass/checkpoint/4_net_Thu_Jul__6_17_08_42_2023.pt'
 SR_model.load_state_dict(torch.load(wights_SR_path, map_location=device))
 
 SR_model.to(device)
@@ -138,7 +138,7 @@ SR_model.eval()
 # -----------
 num_classes = 6
 model_class_name = 'DenseNet'  # Simple_CNN; DenseNet; EfficientNet; GoogLeNet; VGG; Wide_ResNet
-weights_class_root = 'checkpoint/DenseNet/SR_images/no_finetune/02_28_2024/7_net_Wed_Feb_28_15_32_41_2024.pt'
+weights_class_root = 'checkpoint/DenseNet/7_net_Wed_Feb_28_15_32_41_2024.pt'
 transform_class = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((224, 224)),
